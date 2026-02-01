@@ -1,0 +1,35 @@
+services:
+  odoo:
+    build: .
+    user: root
+    container_name: odoo_dev
+    depends_on:
+      - db
+    ports:
+      - "8069:8069"
+    volumes:
+      - ./addons:/mnt/extra-addons
+      - ./config/odoo.conf:/etc/odoo/odoo.conf
+      - odoo_data:/var/lib/odoo
+    environment:
+      - HOST=db
+      - USER=odoo
+      - PASSWORD=odoo
+      - ODOO_RC=/etc/odoo/odoo.conf
+    command: odoo server --dev=all
+
+  db:
+    image: postgres:17
+    container_name: odoo_db
+    ports:
+      - "5438:5432"
+    environment:
+      - POSTGRES_USER=odoo
+      - POSTGRES_PASSWORD=odoo
+      - POSTGRES_DB=postgres
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+volumes:
+  odoo_data:
+  db_data:

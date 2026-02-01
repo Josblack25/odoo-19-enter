@@ -25,8 +25,8 @@ RUN apt-get update && apt-get install -y \
 # Crear directorio de trabajo
 WORKDIR /opt/odoo
 
-# Copiar el archivo de requerimientos primero para aprovechar el caché de Docker
-COPY requirements.txt .
+# Copiar el archivo de requerimientos de Odoo e instalar
+COPY ./src/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copiar todo tu código de Odoo al contenedor
@@ -39,4 +39,4 @@ RUN pip install -e .
 EXPOSE 8069
 
 # Comando por defecto
-CMD ["odoo", "server"]
+ENTRYPOINT ["/opt/odoo/src/odoo-bin"]
